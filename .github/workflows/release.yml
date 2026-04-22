@@ -21,6 +21,10 @@ jobs:
           - platform: "windows-latest" # for msi and exe
 
     runs-on: ${{ matrix.platform }}
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true # Note: GitHub is currently deprecating Node 16/20 in actions, but let's try ensuring at least 20 or forcing higher if needed. Actually the message said Node 20 is deprecated? Usually it's Node 16. If it's Node 20, we use 24.
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
     steps:
       - uses: actions/checkout@v4
 
@@ -28,6 +32,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+
+      - name: debug node version
+        run: |
+          node -v
+          npm -v
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
