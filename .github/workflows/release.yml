@@ -21,9 +21,6 @@ jobs:
           - platform: "windows-latest" # for msi and exe
 
     runs-on: ${{ matrix.platform }}
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true # Note: GitHub is currently deprecating Node 16/20 in actions, but let's try ensuring at least 20 or forcing higher if needed. Actually the message said Node 20 is deprecated? Usually it's Node 16. If it's Node 20, we use 24.
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - uses: actions/checkout@v4
@@ -51,10 +48,13 @@ jobs:
           sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libjavascriptcoregtk-4.1-dev libsoup-3.0-dev
 
       - name: install frontend dependencies
-        run: npm install
+        run: npm ci
 
       - name: build frontend
         run: npm run build
+
+      - name: verify frontend build
+        run: ls -R dist
 
       - uses: tauri-apps/tauri-action@v0
         env:
